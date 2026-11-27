@@ -34,16 +34,35 @@ try {
 } catch (_) {}
 if (!valid) {
   statusText.textContent = '入口ページの設定が未完了です。管理者はindex.htmlのAPP_URLを設定してください。';
+
 } else {
   openLink.href = APP_URL;
-  openLink.hidden = false;
-  const standalone = window.navigator.standalone === true ||
-    (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+
+  const standalone =
+    window.navigator.standalone === true ||
+    (window.matchMedia &&
+     window.matchMedia('(display-mode: standalone)').matches);
+
   if (standalone) {
-    statusText.textContent = 'システムを開いています。移動しない場合は下のボタンを押してください。';
+    // 已安裝：隱藏按鈕並自動跳轉
+    openLink.hidden = true;
+    statusText.textContent = 'システムを開いています…';
+
+    // 10秒後仍停留在此頁面才顯示按鈕
+    setTimeout(() => {
+      statusText.textContent =
+        '移動しない場合は、下のボタンを押してください。';
+      openLink.hidden = false;
+    }, 10000);
+
     window.location.replace(APP_URL);
+
+  } else {
+    // 尚未安裝：維持原本的顯示方式
+    openLink.hidden = false;
   }
 }
+
 </script>
 </body>
 </html>
